@@ -12,28 +12,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup Node
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
-    - name: Install Newman + Reporter
+    - name: Install Dependencies
       run: npm install
 
-    - name: Run Newman Tests
+    - name: Run Newman and Generate HTML Report
+      run: npm test
+
+    - name: Ensure gh-pages branch exists
       run: |
-        npx newman run postman_collection.json \
-        -e postman_environment.json \
-        -r htmlextra \
-        --reporter-htmlextra-export report.html
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git fetch origin gh-pages || git checkout --orphan gh-pages
 
-    - name: Publish HTML Report to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages
-        publish_dir: .
-        force_orphan: true
-
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: Commit and Push HTML Report to gh-pages
+      run: |
+        git add report.html
+        git commit -m "Update API report [skip ci]" || echo "No changes to commit"
+        git push origin HEAD:gh-pages --force
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
