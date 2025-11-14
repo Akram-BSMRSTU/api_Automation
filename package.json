@@ -1,7 +1,7 @@
 {
-  "name": "postman-api-tests",
+  "name": "api-automation",
   "version": "1.0.0",
-  "description": "API automation with Newman",
+  "description": "Postman collection automation with Newman",
   "main": "index.js",
   "scripts": {
     "test": "newman run FakeStore.postman_collection.json -e fakestore.postman_environment.json -r htmlextra"
