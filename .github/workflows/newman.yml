@@ -9,31 +9,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    # 1️⃣ Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2️⃣ Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
 
-    - name: Install Dependencies
+    # 3️⃣ Install dependencies (use legacy peer deps to fix conflicts)
+    - name: Install dependencies
       run: npm install --legacy-peer-deps
 
-    - name: Run Newman and Generate HTML Report
-      run: |
-       newman run FakeStore.postman_collection.json -e fakestore.postman_environment.json -r htmlextra --reporter-htmlextra-export report.html --bail=false || true
+    # 4️⃣ Run Newman and generate HTML report
+    - name: Run Newman and generate report
+      run: npm test || true
 
-    - name: Ensure gh-pages branch exists
+    # 5️⃣ Debug: list files (optional)
+    - name: List files
+      run: ls -al
+
+    # 6️⃣ Push report.html to gh-pages
+    - name: Commit and push report
       run: |
         git config user.name "github-actions"
         git config user.email "github-actions@github.com"
         git fetch origin gh-pages || git checkout --orphan gh-pages
-
-    - name: Commit and Push HTML Report to gh-pages
-      run: |
+        git checkout gh-pages || git checkout --orphan gh-pages
+        git rm -rf . || true
+        mv ../report.html ./report.html || true
         git add report.html
         git commit -m "Update API report [skip ci]" || echo "No changes to commit"
-        git push origin HEAD:gh-pages --force
+        git push origin gh-pages --force
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
