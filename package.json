@@ -4,7 +4,7 @@
   "description": "Postman collection automation with Newman",
   "main": "index.js",
   "scripts": {
-    "test": "newman run FakeStore.postman_collection.json -e fakestore.postman_environment.json -r htmlextra"
+    "test": "newman run postman_collection.json -e postman_environment.json -r htmlextra --reporter-htmlextra-export report.html"
   },
   "dependencies": {
     "newman": "^5.3.2",
@@ -12,11 +12,4 @@
   }
 }
 
-"scripts": {
-  "test": "newman run FakeStore.postman_collection.json -e fakestore.postman_environment.json -r htmlextra"
-},
-"dependencies": {
-  "newman": "^5.3.2",
-  "newman-reporter-htmlextra": "^1.22.2"
-}
 
