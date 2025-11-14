@@ -1,0 +1,39 @@
+name: Run Postman Tests & Publish Report
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  newman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Newman + Reporter
+      run: npm install
+
+    - name: Run Newman Tests
+      run: |
+        npx newman run postman_collection.json \
+        -e postman_environment.json \
+        -r htmlextra \
+        --reporter-htmlextra-export report.html
+
+    - name: Publish HTML Report to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: .
+        force_orphan: true
+
+          echo Add other actions to build,
+          echo test, and deploy your project.
