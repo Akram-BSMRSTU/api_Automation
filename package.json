@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "api-automation",
   "version": "1.0.0",
@@ -11,3 +12,12 @@
     "newman-reporter-htmlextra": "^1.22.2"
   }
 }
+=======
+"scripts": {
+  "test": "newman run FakeStore.postman_collection.json -e fakestore.postman_environment.json -r htmlextra"
+},
+"dependencies": {
+  "newman": "^5.3.2",
+  "newman-reporter-htmlextra": "^1.22.2"
+}
+>>>>>>> 53f20be237b404ea3ca7fc020027e70bb36ecf22
